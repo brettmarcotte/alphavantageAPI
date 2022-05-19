@@ -54,4 +54,8 @@ public class Overview {
     @Column(name="dividendDate", nullable = false)
     private String dividendDate;
 
+
+    public Object getSymbol() {
+        return null;
+    }
 }

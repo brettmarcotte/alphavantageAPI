@@ -6,6 +6,7 @@ import com.careerdevs.stockapiv1.repositories.OverviewRepostory;
 import com.careerdevs.stockapiv1.utils.ApiErrorHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,25 +51,34 @@ public class OverviewController {
             if (alphaVantageResponse == null) {
                 return ApiErrorHandling.customApiError("Did not receive response from AV",
                         HttpStatus.INTERNAL_SERVER_ERROR);
-            } else if (alphaVantageResponse.equals("{}")){
+            } else if (alphaVantageResponse.equals("{}")) {
                 return ApiErrorHandling.customApiError("No Data Retrieved from AV: ",
-                        HttpStatus.BAD_REQUEST);
+                        HttpStatus.NOT_FOUND);
             }
 
             Overview savedOverview = overviewRepostory.save(alphaVantageResponse);
 
             return ResponseEntity.ok(savedOverview);
 
+        } catch (DataIntegrityViolationException e) {
+            return ApiErrorHandling.customApiError(
+                    "can not upload duplicate Stock Data",
+                    HttpStatus.BAD_REQUEST
+            );
+        } catch (IllegalArgumentException e) {
+            return ApiErrorHandling.customApiError(
+                    "Error In testOverview: Check URL used for AV Request",
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         } catch (Exception e) {
-            System.out.println(e.getClass());
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ApiErrorHandling.genericApiError(e);
         }
     }
 
 
     //http://localhost:4000/api/overview/test(symbol)
     @GetMapping("/{symbol}")
-    private ResponseEntity<?> getOverviewBySymbol (RestTemplate restTemplate, @RequestParam String symbol) {
+    private ResponseEntity<?> getOverviewBySymbol (RestTemplate restTemplate, @PathVariable String symbol) {
         try {
 
             String apiKey = env.getProperty("AV_API_KEY");
@@ -81,13 +91,47 @@ public class OverviewController {
             if (alphaVantageResponse == null) {
                 return ApiErrorHandling.customApiError("Did not receive response from AV",
                         HttpStatus.INTERNAL_SERVER_ERROR);
-            } else if (alphaVantageResponse.equals("{}")){
+            } else if (alphaVantageResponse.getSymbol() == null){
                 return ApiErrorHandling.customApiError("invalid stock symbol: " + symbol,
                         HttpStatus.BAD_REQUEST);
             }
 
             return ResponseEntity.ok(alphaVantageResponse);
 
+        } catch (Exception e) {
+            System.out.println(e.getClass());
+            return ApiErrorHandling.genericApiError(e);
+        }
+    }
+
+    @PostMapping("/{symbol}")
+    private ResponseEntity<?> uploadOverviewBySymbol (RestTemplate restTemplate, @PathVariable String symbol) {
+        try {
+
+            String apiKey = env.getProperty("AV_API_KEY");
+            String url = BASE_URL + "&symbol=" + symbol + "&apikey=" + apiKey;
+
+            System.out.println(url);
+
+            Overview alphaVantageResponse = restTemplate.getForObject(url, Overview.class);
+
+            if (alphaVantageResponse == null) {
+                return ApiErrorHandling.customApiError("Did not receive response from AV",
+                        HttpStatus.INTERNAL_SERVER_ERROR);
+            } else if (alphaVantageResponse.getSymbol() == null){
+                return ApiErrorHandling.customApiError("invalid stock symbol: " + symbol,
+                        HttpStatus.BAD_REQUEST);
+            }
+            
+            Overview savedOverview = overviewRepostory.save(alphaVantageResponse);
+
+            return ResponseEntity.ok(savedOverview);
+
+        } catch (DataIntegrityViolationException e) {
+            return ApiErrorHandling.customApiError(
+                    "can not upload duplicate Stock Data",
+                    HttpStatus.BAD_REQUEST
+            );
         } catch (Exception e) {
             System.out.println(e.getClass());
             return ApiErrorHandling.genericApiError(e);
