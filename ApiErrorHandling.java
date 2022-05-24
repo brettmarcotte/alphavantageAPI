@@ -10,7 +10,7 @@ public class ApiErrorHandling {
         System.out.println(e.getClass());
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
-    public static  ResponseEntity<?> customApiError (String message, HttpStatus status) {
+    public static  ResponseEntity<?> customApiError (String message, int status) {
         return ResponseEntity.status(status).body(message);
     }
 }

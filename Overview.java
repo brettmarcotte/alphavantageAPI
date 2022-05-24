@@ -55,7 +55,64 @@ public class Overview {
     private String dividendDate;
 
 
-    public Object getSymbol() {
-        return null;
+    public long getId() {
+        return id;
+    }
+
+    public String getSymbol() {
+        return Symbol;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public String getIndustrty() {
+        return industrty;
+    }
+
+    public String getMarketcap() {
+        return marketcap;
+    }
+
+    public String getYearLow() {
+        return yearLow;
+    }
+
+    public String getDividendDate() {
+        return dividendDate;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"Symbol\":\"" + Symbol + '"' +
+                ", \"assetType\":\"" + assetType + '"' +
+                ", \"name\":\"" + name + '"' +
+                ", \"currency\":\"" + currency + '"' +
+                ", \"country\":\"" + country + '"' +
+                ", \"sector\":\"" + sector + '"' +
+                ", \"industrty\":\"" + industrty + '"' +
+                ", \"marketcap\":\"" + marketcap + '"' +
+                ", \"yearLow\":\"" + yearLow + '"' +
+                ", \"dividendDate\":\"" + dividendDate + '"' +
+                '}';
     }
 }
