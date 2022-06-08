@@ -20,7 +20,7 @@ public interface OverviewRepository extends CrudRepository<Overview, Long> {
 
     List<Overview> findByCountry(String country);
 
-    List<Overview> findBySector(String Sector);
+    List<Overview> findBySector(String sector);
 
 
     
