@@ -2,11 +2,9 @@ package com.careerdevs.stockapiv1.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
 public class Overview {
 
     @Id
@@ -16,7 +14,7 @@ public class Overview {
 
     @JsonProperty("Symbol")
     @Column(name = "symbol", nullable = false, unique = true)
-    private String Symbol;
+    private String symbol;
 
     @JsonProperty("AssetType")
     @Column(name = "asset_type", nullable = false)
@@ -40,27 +38,53 @@ public class Overview {
 
     @JsonProperty("Industry")
     @Column(name = "industry", nullable = false)
-    private String industrty;
+    private String industry;
 
     @JsonProperty("MarketCapitalization")
     @Column(name = "market_cap", nullable = false)
-    private String marketcap;
+    private String marketCap;
+
+    @JsonProperty("Exchange")
+    @Column(name = "exchange", nullable = false)
+    private String exchange;
 
     @JsonProperty("52WeekHigh")
-    @Column(name="year_low", nullable = false)
+    @Column(name="year_High", nullable = false)
+    private String yearHigh;
+
+    @JsonProperty("52WeekLow")
+    @Column(name = "year_Low", nullable = false)
     private String yearLow;
 
     @JsonProperty("DividendDate")
     @Column(name="dividendDate", nullable = false)
     private String dividendDate;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"symbol\":\"" + symbol + '"' +
+                ", \"assetType\":\"" + assetType + '"' +
+                ", \"name\":\"" + name + '"' +
+                ", \"currency\":\"" + currency + '"' +
+                ", \"country\":\"" + country + '"' +
+                ", \"sector\":\"" + sector + '"' +
+                ", \"industrty\":\"" + industry + '"' +
+                ", \"marketcap\":\"" + marketCap + '"' +
+                ", \"exchange\":\"" + exchange + '"' +
+                ", \"yearHigh\":\"" + yearHigh + '"' +
+                ", \"yearLow\":\"" + yearLow + '"' +
+                ", \"dividendDate\":\"" + dividendDate + '"' +
+                '}';
+    }
 
     public long getId() {
         return id;
     }
 
     public String getSymbol() {
-        return Symbol;
+        return symbol;
     }
 
     public String getAssetType() {
@@ -84,11 +108,19 @@ public class Overview {
     }
 
     public String getIndustrty() {
-        return industrty;
+        return industry;
     }
 
     public String getMarketcap() {
-        return marketcap;
+        return marketCap;
+    }
+
+    public String getExchange() {
+        return exchange;
+    }
+
+    public String getYearHigh() {
+        return yearHigh;
     }
 
     public String getYearLow() {
@@ -97,22 +129,5 @@ public class Overview {
 
     public String getDividendDate() {
         return dividendDate;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"Symbol\":\"" + Symbol + '"' +
-                ", \"assetType\":\"" + assetType + '"' +
-                ", \"name\":\"" + name + '"' +
-                ", \"currency\":\"" + currency + '"' +
-                ", \"country\":\"" + country + '"' +
-                ", \"sector\":\"" + sector + '"' +
-                ", \"industrty\":\"" + industrty + '"' +
-                ", \"marketcap\":\"" + marketcap + '"' +
-                ", \"yearLow\":\"" + yearLow + '"' +
-                ", \"dividendDate\":\"" + dividendDate + '"' +
-                '}';
     }
 }
